@@ -1,0 +1,9 @@
+com/streampulse/controller/PublishController.class
+com/streampulse/controller/PriceRestController.class
+com/streampulse/StreamPulseApplication.class
+com/streampulse/service/PriceGeneratorService.class
+com/streampulse/model/PriceUpdate.class
+com/streampulse/service/PriceHistoryService.class
+com/streampulse/analytics/AnalyticsUpdate.class
+com/streampulse/config/WebSocketConfig.class
+com/streampulse/analytics/AnalyticsService.class

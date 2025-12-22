@@ -292,6 +292,9 @@ Focus areas:
 
 ---
 
-## 🧑‍💻 Author
+## 👨‍💻 Author
 
-Built as a learning-driven yet professional-grade real-time analytics library.
+Atul Kumar Upadhyay  
+Backend Engineer | Java | Real-Time Systems  
+
+This project was built as a deep-dive into library-quality real-time stream analytics design.

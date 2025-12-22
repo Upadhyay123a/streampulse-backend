@@ -1,41 +1,53 @@
 # StreamPulse
 
-🚀 **StreamPulse** is a **modular real-time stream analytics library for Java** designed to process continuous data streams with pluggable analytics and flexible output adapters.
+🚀 **StreamPulse** is a **library-first, modular real-time stream analytics framework for Java**. It is designed to process continuous data streams with pluggable analytics, flexible output adapters, and zero coupling between core logic and frameworks.
 
-Unlike typical real-time dashboards or hardcoded applications, StreamPulse is built as a **reusable library**, not just an app.
+Unlike typical "real-time apps" or dashboards, StreamPulse is built as a **reusable analytics engine** that can power many kinds of systems.
 
 ---
 
-## ❓ Why StreamPulse Exists (Problem Statement)
+## 🧠 Why StreamPulse Exists (Problem Statement)
 
-Most real-time analytics projects suffer from these issues:
+Most real-time analytics projects suffer from the same architectural problems:
 
-❌ Tightly coupled to a specific data source (crypto, sensors, logs)  
-❌ Analytics logic mixed with transport logic (REST/WebSocket)  
-❌ Difficult to extend or reuse  
-❌ Built as demos, not libraries  
+❌ Analytics logic tightly coupled to REST/WebSockets
+❌ Hardcoded data sources (crypto, sensors, logs)
+❌ Difficult to extend or reuse analytics
+❌ Built as demos, not as reusable libraries
 
-StreamPulse was created to **decouple real-time data ingestion, analytics computation, and data publishing**, enabling developers to build scalable, reusable real-time systems.
+**StreamPulse solves this by cleanly separating:**
+
+* Data ingestion
+* Stream processing
+* Analytics computation
+* Result publishing
+
+This enables **clean reuse, testing, and extension**.
 
 ---
 
 ## 🌟 What Makes StreamPulse Unique
 
-### 1️⃣ Library-First Architecture (Not App-First)
+### 1️⃣ Library-First Architecture (Core Before Frameworks)
 
-StreamPulse is designed as a **core Java library** that can run:
-- Inside Spring Boot
-- Inside microservices
-- Inside batch jobs
-- Without any web framework
+StreamPulse is designed as a **pure Java analytics library**.
 
-> Spring Boot is used only as an adapter — never as a dependency of core analytics.
+* Core logic has **no dependency on Spring or Web**
+* Frameworks are added only via adapters
+* Can run inside:
+
+  * Spring Boot
+  * Microservices
+  * Batch jobs
+  * Standalone Java apps
+
+> Frameworks are optional — analytics are not.
 
 ---
 
-### 2️⃣ Analytics as Plug-ins (Key Differentiator)
+### 2️⃣ Pluggable Analytics (Plugin Model)
 
-Analytics are **independent, reusable components**.
+Analytics are independent, reusable modules:
 
 ```java
 engine.register(new MovingAverage(30));
@@ -44,27 +56,29 @@ engine.register(new AnomalyDetector(3.0));
 ```
 
 Each analytics module:
-- Works independently
-- Can be added/removed without affecting others
-- Receives data in real time
-- Emits structured results
 
-This design mirrors **professional stream processing engines**.
+* Is stateful
+* Operates on live streams
+* Can be added/removed dynamically
+* Emits structured results
+
+This mirrors professional stream engines (Flink, Spark Streaming — simplified).
 
 ---
 
 ### 3️⃣ Data Source Agnostic
 
-StreamPulse does **not** assume any data type.
+StreamPulse does **not assume any domain**.
 
 Supported examples:
-- IoT sensors
-- Financial ticks
-- Application logs
-- Game events
-- System metrics
 
-Anything that can be converted into a `DataPoint` can be analyzed.
+* IoT sensor readings
+* Financial tick data
+* Application logs
+* Game events
+* System metrics
+
+Anything convertible into a `DataPoint` can be analyzed.
 
 ---
 
@@ -72,72 +86,82 @@ Anything that can be converted into a `DataPoint` can be analyzed.
 
 Analytics results can be consumed through:
 
-• Java API  
-• REST endpoints  
-• WebSocket streams  
-• Message brokers (Kafka – planned)
+• Java callbacks
+• REST APIs
+• WebSocket streams
+• Message brokers (Kafka — planned)
 
-This makes StreamPulse usable in:
-- Dashboards
-- Microservices
-- Alerting systems
-- Data pipelines
+This makes StreamPulse usable for:
+
+* Dashboards
+* Alerting systems
+* Data pipelines
+* Monitoring tools
 
 ---
 
 ### 5️⃣ Event-Driven & Real-Time by Design
 
-StreamPulse operates on **continuous streams**, not static datasets.
+StreamPulse operates on **continuous event streams**, not static datasets.
 
 Features:
-- Sliding window calculations
-- Stateful analytics
-- Event-driven processing
-- Low-latency propagation
+
+* Sliding window analytics
+* Stateful processing
+* Low-latency propagation
+* Event-driven design
 
 ---
 
 ## 🧠 Core Concepts
 
 ### 📦 DataPoint
-A universal representation of a streaming event.
+
+A universal representation of a streaming event:
 
 ```java
-DataPoint(symbol, value, timestamp)
+DataPoint(key, value, timestamp)
 ```
 
 ---
 
 ### ⚙️ Stream Engine
+
 Central coordinator for data flow.
 
 Responsibilities:
-- Accept incoming data
-- Forward data to analytics
-- Collect analytics results
-- Forward results to outputs
+
+* Accept incoming data
+* Forward data to analytics
+* Maintain state
+* Collect analytics results
+* Dispatch results to outputs
 
 ---
 
 ### 📊 Analytics Module
-Encapsulates a single analytics logic.
+
+Encapsulates one analytics algorithm.
 
 Examples:
-- Moving Average
-- Spike Detection
-- Anomaly Detection
-- Trend Detection (future)
+
+* Moving Average
+* Spike Detection
+* Anomaly Detection
+* Trend Detection (future)
 
 ---
 
 ### 📡 Output Adapter
+
 Publishes analytics results.
 
 Examples:
-- WebSocket publisher
-- REST API provider
-- Java callback
-- Kafka publisher (future)
+
+* WebSocket publisher
+* REST endpoints
+* Java listeners
+* Kafka producer (future)
 
 ---
 
@@ -153,80 +177,118 @@ Examples:
 [ Output Adapters ]
 ```
 
-This separation allows independent scaling and evolution.
+Each layer evolves independently.
 
 ---
 
-## 📁 Project Structure
+## 📁 Final Folder Structure
 
 ```
-streampulse
+streampulse-backend
 │
 ├── pom.xml
 ├── README.md
 │
-├── streampulse-core
-│   └── analytics engine & models (Pure Java)
+├── src
+│   └── main
+│       ├── java
+│       │   └── com
+│       │       └── streampulse
+│       │           │
+│       │           ├── StreamPulseApplication.java   # TEMP (demo runner)
+│       │           │
+│       │           ├── api                          # Public contracts
+│       │           │     ├── StreamEngine.java
+│       │           │     ├── Analytics.java
+│       │           │     └── ResultListener.java
+│       │           │
+│       │           ├── engine                       # Core engine implementation
+│       │           │     └── DefaultStreamEngine.java
+│       │           │
+│       │           ├── model                        # Core data models
+│       │           │     ├── DataPoint.java
+│       │           │     └── AnalyticsResult.java
+│       │           │
+│       │           ├── analytics                    # Built-in analytics
+│       │           │     ├── MovingAverage.java
+│       │           │     ├── SpikeDetector.java
+│       │           │     └── AnomalyDetector.java
+│       │           │
+│       │           ├── output                       # Result dispatching
+│       │           │     └── ResultPublisher.java
+│       │           │
+│       │           ├── adapter                      # Framework-specific code
+│       │           │     ├── rest
+│       │           │     │     └── PriceRestController.java
+│       │           │     └── websocket
+│       │           │           └── WebSocketPublisher.java
+│       │           │
+│       │           └── util                         # Utilities
+│       │                 └── StatsUtils.java
+│       │
+│       └── resources
+│           └── application.properties
 │
-├── streampulse-spring
-│   └── REST & WebSocket adapters
-│
-└── examples
-    └── Real-time dashboards & demos
+└── future-modules (planned)
+    ├── streampulse-core
+    ├── streampulse-spring
+    └── examples
 ```
 
 ---
 
 ## 🛠️ Technology Stack
 
-- Java 21
-- Maven
-- Spring Boot (Adapters only)
-- WebSockets (STOMP)
-- JSON serialization
+* Java 21
+* Maven
+* Spring Boot (Adapters only)
+* WebSockets (STOMP)
+* JSON serialization
 
 ---
 
 ## 🎯 Use Cases
 
-✔ Real-time monitoring systems  
-✔ IoT analytics platforms  
-✔ Financial tick analysis  
-✔ Live dashboards  
-✔ Alerting & anomaly detection  
-✔ Data engineering pipelines  
+✔ Real-time monitoring systems
+✔ IoT analytics platforms
+✔ Financial tick analysis
+✔ Live dashboards
+✔ Alerting & anomaly detection
+✔ Data engineering pipelines
 
 ---
 
 ## 📈 Scalability & Extensibility
 
 StreamPulse is designed to:
-- Add new analytics without code changes
-- Add new output channels easily
-- Scale horizontally via event streams
-- Support future persistence layers
+
+* Add analytics without core changes
+* Add output channels easily
+* Scale via event streams
+* Support persistence in future
 
 ---
 
 ## 🧭 Roadmap
 
-- Kafka & RabbitMQ adapters
-- Persistence support
-- Custom analytics DSL
-- Performance benchmarking
-- Maven Central publishing
+* Kafka & RabbitMQ adapters
+* Persistence layer
+* Analytics DSL
+* Performance benchmarks
+* Maven Central publishing
 
 ---
 
 ## 👨‍💻 Project Vision
 
-StreamPulse aims to demonstrate **production-grade system design**, not just feature implementation.
+StreamPulse is built to demonstrate **production-grade system design**, not just feature implementation.
 
-This project focuses on:
-- Clean architecture
-- Extensibility
-- Real-time systems
-- Library-quality design
+Focus areas:
+
+* Clean architecture
+* Extensibility
+* Real-time systems
+* Library-quality code
 
 ---
 

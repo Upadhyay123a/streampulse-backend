@@ -1,9 +1,0 @@
-/workspaces/streampulse-backend/src/main/java/com/streampulse/StreamPulseApplication.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/analytics/AnalyticsService.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/analytics/AnalyticsUpdate.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/config/WebSocketConfig.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/controller/PriceRestController.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/controller/PublishController.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/model/PriceUpdate.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/service/PriceGeneratorService.java
-/workspaces/streampulse-backend/src/main/java/com/streampulse/service/PriceHistoryService.java

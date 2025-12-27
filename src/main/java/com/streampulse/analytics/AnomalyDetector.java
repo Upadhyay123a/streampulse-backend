@@ -13,10 +13,27 @@ import com.streampulse.model.DataPoint;
  */
 public class AnomalyDetector implements Analytics {
 
+    private static final int DEFAULT_WINDOW_SIZE = 20;
+
     private final int windowSize;
     private final double zThreshold;
     private final Deque<Double> window = new ArrayDeque<>();
 
+    /**
+     * Convenience constructor with default window size.
+     *
+     * @param zThreshold z-score threshold
+     */
+    public AnomalyDetector(double zThreshold) {
+        this(DEFAULT_WINDOW_SIZE, zThreshold);
+    }
+
+    /**
+     * Full constructor.
+     *
+     * @param windowSize number of recent values
+     * @param zThreshold anomaly threshold
+     */
     public AnomalyDetector(int windowSize, double zThreshold) {
         if (windowSize <= 1) {
             throw new IllegalArgumentException("Window size must be > 1");
@@ -43,7 +60,7 @@ public class AnomalyDetector implements Analytics {
         }
 
         if (window.size() < windowSize) {
-            return null; // not enough data
+            return null;
         }
 
         double mean = computeMean();
@@ -90,31 +107,3 @@ public class AnomalyDetector implements Analytics {
         return Math.sqrt(sum / (window.size() - 1));
     }
 }
-/*
-✅ Real Statistical Detection
-
-Z-Score is widely used in:
-
-Finance
-
-IoT
-
-Monitoring systems
-
-Fraud detection
-
-✅ Sliding Window
-
-Responds to recent behavior, not stale history
-
-✅ Noise Reduction
-
-No output until window is full
-
-Avoids division-by-zero
-
-✅ Generic & Reusable
-
-No domain assumptions
-
-Works with any stream */

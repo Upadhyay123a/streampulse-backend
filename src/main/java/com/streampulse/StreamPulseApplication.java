@@ -21,7 +21,7 @@ public class StreamPulseApplication {
 
     /**
      * Demo runner – wires engine + analytics + publisher.
-     * This will be removed when library is published.
+     * TEMPORARY: used only for verification.
      */
     @Bean
     CommandLineRunner demoRunner(ResultPublisher publisher) {
@@ -32,12 +32,12 @@ public class StreamPulseApplication {
             // Register analytics
             engine.register(new MovingAverage(5));
             engine.register(new SpikeDetector(0.15));
-            engine.register(new AnomalyDetector(3.0));
+            engine.register(new AnomalyDetector(5, 3.0)); // ✅ FIXED
 
             // Attach output
             engine.addResultListener(publisher::publish);
 
-            // Simulate streaming data
+            // Simulated stream
             double[] values = {100, 101, 102, 110, 98, 97, 140, 99, 100};
 
             for (double v : values) {

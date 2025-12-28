@@ -69,28 +69,3 @@ public class DefaultStreamEngine implements StreamEngine {
         }
     }
 }
-/*
-why:
-✅ Library-first
-
-No framework imports
-
-Can run anywhere (CLI, Spring, tests, Kafka consumers)
-
-✅ Single Responsibility
-
-Engine coordinates — analytics do analytics, listeners publish
-
-✅ Pluggable
-
-Add/remove analytics freely
-
-Add/remove output channels freely
-
-✅ Predictable & Testable
-
-Deterministic behavior
-
-Easy unit testing
-
-No hidden side effects */

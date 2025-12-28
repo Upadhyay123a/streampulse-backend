@@ -13,10 +13,3 @@ public interface ResultListener {
      */
     void onResult(AnalyticsResult result);
 }
-/*Why:
-
-Works with Java lambdas
-
-REST, WebSocket, Kafka, DB → all adapters
-
-Zero coupling */

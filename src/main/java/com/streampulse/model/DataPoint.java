@@ -29,14 +29,3 @@ public final class DataPoint {
         return timestamp;
     }
 }
-/*
-Why 
-
-Immutable
-
-Generic
-
-Library-safe
-
-No framework dependency
- */

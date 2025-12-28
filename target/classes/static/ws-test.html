@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>StreamPulse Analytics Live</title>
+
+  <!-- SockJS + STOMP -->
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f2f5; }
+    h2 { color: #2c3e50; }
+    #container { display: flex; gap: 20px; }
+    #output, #analytics { 
+      background: #fff; padding: 15px; border: 1px solid #ccc; 
+      height: 400px; width: 400px; overflow-y: auto; white-space: pre-wrap; 
+      border-radius: 8px;
+    }
+    #form { margin-top: 20px; }
+    input { padding: 5px; margin-right: 5px; width: 120px; }
+    button { padding: 5px 12px; cursor: pointer; }
+    .flagged { color: red; font-weight: bold; }
+    .analytics-entry { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <h2>StreamPulse Analytics Live</h2>
+
+  <div id="form">
+    <input type="text" id="key" value="BTC" placeholder="Key">
+    <input type="number" id="value" value="150" placeholder="Value">
+    <button onclick="sendData()">Send</button>
+  </div>
+
+  <div id="container">
+    <div>
+      <h3>Server Responses</h3>
+      <pre id="output">Connecting to WebSocket...\n</pre>
+    </div>
+    <div>
+      <h3>Analytics Stream</h3>
+      <div id="analytics"></div>
+    </div>
+  </div>
+
+  <script>
+    const output = document.getElementById('output');
+    const analyticsDiv = document.getElementById('analytics');
+
+    // ---- SockJS + STOMP ----
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+    stompClient.debug = null; // disable verbose logs
+    stompClient.reconnectDelay = 5000;
+
+    stompClient.connect({}, frame => {
+      output.textContent += '✅ Connected to WebSocket!\n\n';
+
+      stompClient.subscribe('/topic/analytics', message => {
+        try {
+          const data = JSON.parse(message.body);
+
+          // Highlight flagged events
+          const entry = document.createElement('div');
+          entry.className = 'analytics-entry';
+          if(data.flagged) entry.classList.add('flagged');
+          entry.textContent = `[${data.key}] ${data.type} | Value: ${data.value} | Flagged: ${data.flagged}`;
+          analyticsDiv.appendChild(entry);
+
+          // Auto-scroll
+          analyticsDiv.scrollTop = analyticsDiv.scrollHeight;
+        } catch (e) {
+          output.textContent += '[Raw Message] ' + message.body + "\n";
+        }
+      });
+    }, error => {
+      output.textContent += '❌ WebSocket connection error: ' + error + "\n";
+    });
+
+    function sendData() {
+      const key = document.getElementById('key').value.trim();
+      const value = parseFloat(document.getElementById('value').value);
+      if (!key || isNaN(value)) { alert('Enter valid key/value'); return; }
+
+      fetch('/api/stream/ingest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value })
+      })
+      .then(res => res.text())
+      .then(text => {
+        output.textContent += `[Server Response] ${text}\n`;
+        output.scrollTop = output.scrollHeight;
+      })
+      .catch(err => {
+        output.textContent += '[Error] ' + err + '\n';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -45,10 +45,3 @@ public final class AnalyticsResult {
         return timestamp;
     }
 }
-/*Why:
-
-Analytics output is standardized
-
-Can represent any analytics
-
-Flag allows anomaly/spike/etc. */

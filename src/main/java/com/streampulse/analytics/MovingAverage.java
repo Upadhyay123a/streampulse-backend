@@ -57,30 +57,3 @@ public class MovingAverage implements Analytics {
         sum = 0.0;
     }
 }
-/*
-
-✅ Analytics.name()
-
-Enables engine-level identification
-
-Used by logging, routing, storage, UI
-
-✅ DataPoint.getKey()
-
-Domain-agnostic replacement for symbol
-
-Works for prices, sensors, metrics, logs
-
-✅ AnalyticsResult consistency
-
-key + type + value + flagged + timestamp
-
-Uniform output for all analytics
-
-🟢 STATUS CHECK
-Component	Status
-StreamEngine	✅ Correct
-Analytics API	✅ Correct
-DataPoint model	✅ Correct
-MovingAverage	✅ FIXED
-Compiler errors	❌ RESOLVED */

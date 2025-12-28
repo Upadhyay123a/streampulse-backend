@@ -28,13 +28,3 @@ public interface StreamEngine {
      */
     void reset();
 }
-/*
-
-
-Clear responsibilities
-
-Extensible
-
-Framework-independent
-
-Matches real stream engines conceptually */

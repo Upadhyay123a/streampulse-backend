@@ -29,12 +29,3 @@ public interface Analytics {
         // optional
     }
 }
-/*
-Why this design is powerful:
-
-Stateless OR stateful analytics allowed
-
-null result avoids noise
-
-Reset enables reuse/testing
- */

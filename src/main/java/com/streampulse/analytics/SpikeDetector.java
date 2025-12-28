@@ -64,29 +64,3 @@ public class SpikeDetector implements Analytics {
         lastValue = null;
     }
 }
-/*
-✅ Library-First
-
-No framework imports
-
-No assumptions about data meaning
-
-Works for prices, sensors, metrics, anything
-
-✅ Correct Spike Logic
-
-Uses percentage change (industry standard)
-
-Absolute change handles both up & down spikes
-
-✅ Noise-Free
-
-Emits result only when spike occurs
-
-No useless events
-
-✅ Safe State Handling
-
-First value initializes state
-
-Resettable for reuse/testing */

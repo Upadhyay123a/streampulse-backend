@@ -7,28 +7,35 @@ import com.streampulse.analytics.AnomalyDetector;
 import com.streampulse.analytics.MovingAverage;
 import com.streampulse.analytics.SpikeDetector;
 import com.streampulse.engine.DefaultStreamEngine;
-import com.streampulse.store.InMemoryResultStore;
-import com.streampulse.store.ResultStore;
+import com.streampulse.output.ResultPublisher;
 
+/**
+ * Central Spring configuration for StreamPulse.
+ *
+ * This config wires:
+ *  - Core StreamEngine
+ *  - Built-in analytics modules
+ *  - Output publisher
+ *
+ * NOTE:
+ * This is Spring-only glue code.
+ * Core engine remains framework-agnostic.
+ */
 @Configuration
 public class StreamPulseConfig {
 
     @Bean
-    public ResultStore resultStore() {
-        return new InMemoryResultStore();
-    }
+    public DefaultStreamEngine streamEngine(ResultPublisher publisher) {
 
-    @Bean
-    public DefaultStreamEngine streamEngine(ResultStore store) {
         DefaultStreamEngine engine = new DefaultStreamEngine();
 
-        // Register analytics
+        // ---- Register analytics modules ----
         engine.register(new MovingAverage(5));
-        engine.register(new SpikeDetector(0.08));
-        engine.register(new AnomalyDetector(3.0));
+        engine.register(new SpikeDetector(0.15));
+        engine.register(new AnomalyDetector(5, 3.0));
 
-        // Register store as listener
-        engine.addResultListener(store::add);
+        // ---- Attach output channel ----
+        engine.addResultListener(publisher::publish);
 
         return engine;
     }

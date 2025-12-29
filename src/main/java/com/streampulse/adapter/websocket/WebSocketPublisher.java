@@ -20,17 +20,11 @@ public class WebSocketPublisher implements ResultPublisher, ResultListener {
         this.messagingTemplate = messagingTemplate;
     }
 
-    /**
-     * Used by core processing pipeline
-     */
     @Override
     public void publish(AnalyticsResult result) {
         messagingTemplate.convertAndSend("/topic/analytics", result);
     }
 
-    /**
-     * Used by event-driven listeners
-     */
     @Override
     public void onResult(AnalyticsResult result) {
         publish(result);

@@ -6,17 +6,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.streampulse.engine.DefaultStreamEngine;
+import com.streampulse.core.StreamPulse;
 import com.streampulse.model.DataPoint;
 
 @RestController
 @RequestMapping("/api/stream")
 public class PriceRestController {
 
-    private final DefaultStreamEngine engine;
+    private final StreamPulse streamPulse;
 
-    public PriceRestController(DefaultStreamEngine engine) {
-        this.engine = engine;
+    public PriceRestController(StreamPulse streamPulse) {
+        this.streamPulse = streamPulse;
     }
 
     @PostMapping("/ingest")
@@ -36,7 +36,8 @@ public class PriceRestController {
                 timestamp
         );
 
-        engine.ingest(point);
+        // Pass data to core StreamPulse instead of DefaultStreamEngine
+        streamPulse.ingest(point);
 
         return ResponseEntity.ok("ingested");
     }

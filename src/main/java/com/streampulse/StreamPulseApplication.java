@@ -33,6 +33,7 @@ public class StreamPulseApplication {
             engine.register(new MovingAverage(5));
             engine.register(new SpikeDetector(0.15));
             engine.register(new AnomalyDetector(5, 3.0)); // ✅ FIXED
+        
 
             // Attach output
             engine.addResultListener(publisher::publish);

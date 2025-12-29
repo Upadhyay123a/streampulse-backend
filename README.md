@@ -195,44 +195,58 @@ streampulse-backend
 │       │   └── com
 │       │       └── streampulse
 │       │           │
-│       │           ├── StreamPulseApplication.java   # TEMP (demo runner)
+│       │           ├── StreamPulseApplication.java   # TEMP demo runner
 │       │           │
-│       │           ├── api                          # Public contracts
+│       │           ├── api                           # Public contracts
 │       │           │     ├── StreamEngine.java
 │       │           │     ├── Analytics.java
 │       │           │     └── ResultListener.java
 │       │           │
-│       │           ├── engine                       # Core engine implementation
+│       │           ├── engine                        # Core engine
 │       │           │     └── DefaultStreamEngine.java
 │       │           │
-│       │           ├── model                        # Core data models
+│       │           ├── model                         # Domain models
 │       │           │     ├── DataPoint.java
 │       │           │     └── AnalyticsResult.java
 │       │           │
-│       │           ├── analytics                    # Built-in analytics
+│       │           ├── analytics                     # Built-in analytics
 │       │           │     ├── MovingAverage.java
 │       │           │     ├── SpikeDetector.java
 │       │           │     └── AnomalyDetector.java
 │       │           │
-│       │           ├── output                       # Result dispatching
+│       │           ├── output                        # Output abstraction
 │       │           │     └── ResultPublisher.java
 │       │           │
-│       │           ├── adapter                      # Framework-specific code
+│       │           ├── store                         # Result storage
+│       │           │     ├── ResultStore.java
+│       │           │     └── InMemoryResultStore.java
+│       │           │
+│       │           ├── adapter                       # Framework adapters
 │       │           │     ├── rest
+│       │           │     │     ├── IngestRequest.java
 │       │           │     │     └── PriceRestController.java
+│       │           │     │
 │       │           │     └── websocket
+│       │           │           ├── WebSocketConfig.java
 │       │           │           └── WebSocketPublisher.java
 │       │           │
-│       │           └── util                         # Utilities
+│       │           ├── config                        # Spring wiring
+│       │           │     └── StreamPulseConfig.java
+│       │           │
+│       │           └── util                          # Utilities
 │       │                 └── StatsUtils.java
 │       │
 │       └── resources
-│           └── application.properties
+│           ├── application.properties
+│           │
+│           └── static                               # Static frontend
+│               └── ws-test.html                     ✅ WebSocket UI
 │
 └── future-modules (planned)
     ├── streampulse-core
     ├── streampulse-spring
     └── examples
+
 ```
 
 ---

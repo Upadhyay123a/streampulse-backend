@@ -4,11 +4,14 @@ import java.util.List;
 
 import com.streampulse.model.AnalyticsResult;
 
+/**
+ * Storage abstraction for analytics results.
+ */
 public interface ResultStore {
 
-    void add(AnalyticsResult result);
+    void save(AnalyticsResult result);
 
-    List<AnalyticsResult> getAll();
+    List<AnalyticsResult> findAll();
 
     void clear();
 }

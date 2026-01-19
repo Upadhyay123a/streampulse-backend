@@ -8,32 +8,21 @@ import com.streampulse.model.AnalyticsResult;
 import com.streampulse.model.DataPoint;
 
 /**
- * AnomalyDetector detects statistical anomalies
- * using Z-Score over a sliding window.
+ * Production-safe Z-Score based Anomaly Detector
  */
 public class AnomalyDetector implements Analytics {
 
     private static final int DEFAULT_WINDOW_SIZE = 20;
+    private static final double MIN_STD_DEV = 0.0001; // prevents zero variance lock
 
     private final int windowSize;
     private final double zThreshold;
     private final Deque<Double> window = new ArrayDeque<>();
 
-    /**
-     * Convenience constructor with default window size.
-     *
-     * @param zThreshold z-score threshold
-     */
     public AnomalyDetector(double zThreshold) {
         this(DEFAULT_WINDOW_SIZE, zThreshold);
     }
 
-    /**
-     * Full constructor.
-     *
-     * @param windowSize number of recent values
-     * @param zThreshold anomaly threshold
-     */
     public AnomalyDetector(int windowSize, double zThreshold) {
         if (windowSize <= 1) {
             throw new IllegalArgumentException("Window size must be > 1");
@@ -59,6 +48,7 @@ public class AnomalyDetector implements Analytics {
             window.removeFirst();
         }
 
+        // warm-up phase
         if (window.size() < windowSize) {
             return null;
         }
@@ -66,7 +56,8 @@ public class AnomalyDetector implements Analytics {
         double mean = computeMean();
         double std = computeStdDev(mean);
 
-        if (std == 0.0) {
+        // protect against flat markets
+        if (std < MIN_STD_DEV) {
             return null;
         }
 

@@ -6,22 +6,28 @@ import java.util.List;
 
 import com.streampulse.model.AnalyticsResult;
 
+/**
+ * Thread-safe in-memory implementation of ResultStore.
+ */
 public class InMemoryResultStore implements ResultStore {
 
-    private final List<AnalyticsResult> results = new ArrayList<>();
+    private final List<AnalyticsResult> results =
+            Collections.synchronizedList(new ArrayList<>());
 
     @Override
-    public synchronized void add(AnalyticsResult result) {
-        results.add(result);
+    public void save(AnalyticsResult result) {
+        if (result != null) {
+            results.add(result);
+        }
     }
 
     @Override
-    public synchronized List<AnalyticsResult> getAll() {
-        return Collections.unmodifiableList(results);
+    public List<AnalyticsResult> findAll() {
+        return new ArrayList<>(results);
     }
 
     @Override
-    public synchronized void clear() {
+    public void clear() {
         results.clear();
     }
 }

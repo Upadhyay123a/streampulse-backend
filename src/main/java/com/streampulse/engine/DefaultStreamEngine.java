@@ -9,17 +9,6 @@ import com.streampulse.api.StreamEngine;
 import com.streampulse.model.AnalyticsResult;
 import com.streampulse.model.DataPoint;
 
-/**
- * Default in-memory implementation of StreamEngine.
- *
- * Responsibilities:
- *  - Accept incoming DataPoints
- *  - Forward them to registered Analytics modules
- *  - Collect AnalyticsResults
- *  - Publish results to registered ResultListeners
- *
- * This class is framework-agnostic and library-safe.
- */
 public class DefaultStreamEngine implements StreamEngine {
 
     private final List<Analytics> analyticsList = new ArrayList<>();
@@ -48,10 +37,16 @@ public class DefaultStreamEngine implements StreamEngine {
         }
 
         for (Analytics analytics : analyticsList) {
-            AnalyticsResult result = analytics.analyze(point);
-
-            if (result != null) {
-                publish(result);
+            try {
+                AnalyticsResult result = analytics.analyze(point);
+                if (result != null) {
+                    publish(result);
+                }
+            } catch (Exception e) {
+                // isolate analytics failure (production-grade)
+                System.err.println(
+                    "Analytics failed: " + analytics.name() + " -> " + e.getMessage()
+                );
             }
         }
     }
